@@ -145,3 +145,16 @@ and never recreates a file you deleted.
 
 122 tests. Nothing hits the network, spawns a subprocess, or loads a model —
 every engine is injected as a stub for the file-operation tests.
+
+## Privacy
+
+On default settings **no screenshot ever leaves your computer** -- labeling runs
+on your own GPU and the OCR pass uses the engine built into Windows. The
+optional `cli` and `api` engines do send images to Anthropic. Full detail in
+[PRIVACY.md](PRIVACY.md).
+
+## Licence
+
+Proprietary -- all rights reserved. See [LICENSE](LICENSE).
+Third-party components and model licences: [NOTICE.md](NOTICE.md).
+Security posture and reporting: [SECURITY.md](SECURITY.md).

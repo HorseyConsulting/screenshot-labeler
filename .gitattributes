@@ -1,0 +1,4 @@
+# Normalise line endings so Windows and Git stop arguing.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
