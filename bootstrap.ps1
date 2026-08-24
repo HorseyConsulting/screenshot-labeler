@@ -50,8 +50,9 @@ if (-not (Test-Path $InstallDir)) {
     New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
 }
 
-# Copy source only -- never clobber an existing venv or rename log.
-Get-ChildItem $extracted.FullName -Exclude ".venv", "rename-log.jsonl" | ForEach-Object {
+# Copy source only -- never clobber an existing venv or rename log, and never
+# ship the backup folder (reference code that is not part of the product).
+Get-ChildItem $extracted.FullName -Exclude ".venv", "rename-log.jsonl", "backup" | ForEach-Object {
     Copy-Item $_.FullName -Destination $InstallDir -Recurse -Force
 }
 
