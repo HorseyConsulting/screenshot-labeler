@@ -106,14 +106,19 @@ if ($Engine -eq "ollama") {
             if ($gb -gt $vramGB) { $vramGB = $gb }
         }
 
-        if     ($vramGB -ge 8) { $Model = "qwen2.5vl:7b" }
-        elseif ($vramGB -ge 4) { $Model = "qwen2.5vl:3b" }
-        else                   { $Model = "qwen2.5vl:3b" }
+        # Only ever auto-select a model that is licensed for commercial use.
+        # qwen2.5vl:3b would fit smaller GPUs, but upstream it carries the Qwen
+        # Research Licence (non-commercial only) -- despite Ollama shipping an
+        # Apache 2.0 licence file with it. See NOTICE.md.
+        $Model = "qwen2.5vl:7b"
 
-        if ($vramGB -gt 0) {
+        if ($vramGB -ge 8) {
             Write-Ok "Detected $vramGB GB VRAM -- selecting $Model"
+        } elseif ($vramGB -gt 0) {
+            Write-Warn2 "Detected $vramGB GB VRAM. Using $Model anyway; part of it will"
+            Write-Warn2 "run on the CPU, so labeling will be slower."
         } else {
-            Write-Warn2 "Could not detect a GPU. Selecting $Model; it will run on CPU and be slow."
+            Write-Warn2 "Could not detect a GPU. Using $Model on CPU -- expect it to be slow."
         }
     }
 
