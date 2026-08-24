@@ -145,6 +145,17 @@ on your own GPU and the OCR pass uses the engine built into Windows. The
 optional `api` engine does send images to Anthropic. Full detail in
 [PRIVACY.md](PRIVACY.md).
 
+## Using this
+
+The source is public so you can see exactly what this does with your
+screenshots -- which seems like the least you should expect from something that
+reads them. On default settings, nothing is uploaded anywhere.
+
+It is **not** licensed for use, redistribution, or modification (see
+[LICENSE](LICENSE)). A packaged, signed build is planned. If you want to run it
+in the meantime, or you are interested in that build, open an issue and say so
+-- interest is genuinely useful to know about.
+
 ## Licence
 
 Proprietary -- all rights reserved. See [LICENSE](LICENSE).
