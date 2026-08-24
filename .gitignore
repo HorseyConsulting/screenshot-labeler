@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+rename-log.jsonl
+.pytest_cache/
+Marketing/
