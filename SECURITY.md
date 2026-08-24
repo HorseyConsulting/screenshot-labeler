@@ -17,7 +17,7 @@ Screenshot Bot runs with your user account's permissions and:
   immediately after labeling.
 - **Appends** to `rename-log.jsonl` in the application folder.
 - **Connects** to `http://127.0.0.1:11434` (local Ollama) on default settings.
-  Only the optional `cli` and `api` engines make outbound internet connections.
+  Only the optional `api` engine makes outbound internet connections.
 
 ## Deliberate design choices
 

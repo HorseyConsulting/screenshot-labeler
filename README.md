@@ -8,28 +8,21 @@ a real name.
 
 ## Engines
 
-Three interchangeable backends. The watcher currently runs on `ollama`.
-
 | `--engine` | What it uses | Speed | Cost |
 |---|---|---|---|
-| `ollama` (current) | Qwen2.5-VL on your own GPU | ~2.5s | Free, fully offline |
-| `cli` | The local `claude` CLI | ~11s | Free, uses Claude Code limits |
+| `ollama` (default) | Qwen2.5-VL 7B on your own GPU | ~2.5s | Free, fully offline |
 | `api` | `ANTHROPIC_API_KEY` | ~1s | ~$0.0008 per screenshot |
 
-All three get the same OCR assist (below) and produce labels in the same format.
+Both get the same OCR assist (below) and produce labels in the same format.
+The local engine is the default and the only one the installer sets up.
 
-### Setup per engine
+### Setup
 
-**ollama** — install [Ollama](https://ollama.com), then:
-
-```
-ollama pull qwen2.5vl:7b
-```
+**ollama** — `install.ps1` handles this. Manually: install
+[Ollama](https://ollama.com), then `ollama pull qwen2.5vl:7b`.
 
 Needs ~6 GB disk and ~5.5 GB VRAM while running. Ollama unloads the model after
 about 5 minutes idle, so it costs nothing when you are not screenshotting.
-
-**cli** — nothing to do if Claude Code is installed and signed in.
 
 **api** — `setx ANTHROPIC_API_KEY "sk-ant-..."`, then open a new terminal.
 
@@ -79,7 +72,7 @@ Watch in the foreground (Ctrl-C to stop):
 ### The background watcher
 
 ```
-powershell -ExecutionPolicy Bypass -File ".\install-watcher-task.ps1" -Engine ollama
+powershell -ExecutionPolicy Bypass -File ".\install.ps1"
 ```
 
 Registers a scheduled task that starts at logon and runs under `pythonw.exe`
@@ -97,8 +90,8 @@ Unregister-ScheduledTask -TaskName "Screenshot Labeler"    # remove
 | Flag | Meaning |
 |---|---|
 | `--dir PATH` | Folder to work on. Defaults to `%USERPROFILE%\OneDrive\Pictures\Screenshots`. |
-| `--engine cli\|api\|ollama` | Which backend to label with. |
-| `--model ID` | Per-engine default: `haiku`, `claude-haiku-4-5`, `qwen2.5vl:7b`. |
+| `--engine ollama\|api` | Which backend to label with. |
+| `--model ID` | Per-engine default: `qwen2.5vl:7b` (ollama), `claude-haiku-4-5` (api). |
 | `--no-ocr` | Skip the OCR assist. |
 | `--dry-run` | Print proposed renames, change nothing. |
 | `--limit N` | Process at most N files. |
@@ -131,7 +124,6 @@ and never recreates a file you deleted.
 | `renamer.py` | File operations and the undo log. |
 | `ocr.py` | Windows OCR text extraction. |
 | `labeler.py` | API engine, plus the prompts and label-cleaning shared by all engines. |
-| `cli_labeler.py` | `claude` CLI engine. |
 | `ollama_labeler.py` | Local-GPU engine over Ollama's HTTP API. |
 | `runner.py` | Orchestration, retries, "leave it alone on failure". |
 | `watcher.py` | Filesystem events to labeling work. |
@@ -143,14 +135,14 @@ and never recreates a file you deleted.
 .venv\Scripts\python.exe -m pytest
 ```
 
-122 tests. Nothing hits the network, spawns a subprocess, or loads a model —
-every engine is injected as a stub for the file-operation tests.
+108 tests. Nothing hits the network or loads a model — every engine is
+injected as a stub for the file-operation tests.
 
 ## Privacy
 
 On default settings **no screenshot ever leaves your computer** -- labeling runs
 on your own GPU and the OCR pass uses the engine built into Windows. The
-optional `cli` and `api` engines do send images to Anthropic. Full detail in
+optional `api` engine does send images to Anthropic. Full detail in
 [PRIVACY.md](PRIVACY.md).
 
 ## Licence

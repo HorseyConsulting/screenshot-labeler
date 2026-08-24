@@ -63,13 +63,17 @@ the licensing question.
 
 ## Claude / Anthropic
 
-The `cli` and `api` engines send screenshots to Anthropic and are governed by
+The optional `api` engine sends screenshots to Anthropic and is governed by
 Anthropic's terms:
 
 - <https://www.anthropic.com/legal/consumer-terms>
 - <https://www.anthropic.com/legal/commercial-terms>
 
-The `cli` engine consumes the user's own Claude Code subscription. Reselling
-access to it, or building a paid product whose value depends on the end user's
-personal subscription, may not be permitted -- check the terms before shipping
-that engine in a commercial release.
+It is opt-in, requires the user's own API key, and is not configured by the
+installer.
+
+A third engine that ran on the user's Claude Code subscription was removed in
+August 2026: building a paid product whose value depends on the end user's
+personal subscription is legally murky, and it is not worth the ambiguity in a
+commercial release. It remains in git history if ever needed for personal
+use.

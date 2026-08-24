@@ -10,10 +10,9 @@
 #>
 
 param(
-    # cli    = the local Claude Code CLI (best labels, uses your Claude limits)
     # ollama = a vision model on your own GPU (fast, free, fully offline)
     # api    = metered Anthropic API key
-    [ValidateSet("cli", "ollama", "api")]
+    [ValidateSet("ollama", "api")]
     [string]$Engine = "ollama"
 )
 
@@ -30,11 +29,6 @@ if (-not (Test-Path $pythonw)) {
 
 # Check that whichever engine was chosen can actually work on this machine.
 switch ($Engine) {
-    "cli" {
-        if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
-            Write-Warning "The 'claude' CLI was not found on PATH. Labeling will fail until Claude Code is installed."
-        }
-    }
     "ollama" {
         # The engine talks to the local HTTP service, so reachability is what
         # matters here -- not whether ollama.exe happens to be on PATH.

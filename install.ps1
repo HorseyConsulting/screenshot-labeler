@@ -9,13 +9,13 @@
         powershell -ExecutionPolicy Bypass -File ".\install.ps1"
 
     Options:
-        -Engine ollama|cli|api   labeling backend (default: ollama)
+        -Engine ollama|api       labeling backend (default: ollama)
         -Model  <name>           override the auto-selected Ollama model
         -SkipVerify              don't run the end-to-end test at the end
 #>
 
 param(
-    [ValidateSet("ollama", "cli", "api")]
+    [ValidateSet("ollama", "api")]
     [string]$Engine = "ollama",
     [string]$Model = "",
     [switch]$SkipVerify
@@ -147,9 +147,6 @@ if ($Engine -eq "ollama") {
     else { Write-Warn2 "Ollama service is not responding yet; it usually starts on its own shortly." }
 }
 
-if ($Engine -eq "cli" -and -not (Get-Command claude -ErrorAction SilentlyContinue)) {
-    Write-Warn2 "The 'claude' CLI was not found. Install Claude Code, or use -Engine ollama."
-}
 if ($Engine -eq "api" -and -not $env:ANTHROPIC_API_KEY) {
     Write-Warn2 "ANTHROPIC_API_KEY is not set. Set it with: setx ANTHROPIC_API_KEY `"sk-ant-...`""
 }

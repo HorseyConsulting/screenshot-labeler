@@ -59,11 +59,6 @@ def build_labeler(engine: str, model: str | None):
         from screenshot_labeler.ollama_labeler import DEFAULT_OLLAMA_MODEL, OllamaLabeler
 
         return OllamaLabeler(model=model or DEFAULT_OLLAMA_MODEL)
-    if engine == "cli":
-        from screenshot_labeler.cli_labeler import CliLabeler
-
-        return CliLabeler(model=model or "haiku")
-
     import os
 
     from anthropic import Anthropic
@@ -77,7 +72,7 @@ def build_labeler(engine: str, model: str | None):
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--engine", default="ollama", choices=("ollama", "cli", "api"))
+    parser.add_argument("--engine", default="ollama", choices=("ollama", "api"))
     parser.add_argument("--model", default=None)
     args = parser.parse_args()
 

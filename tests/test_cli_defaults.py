@@ -15,9 +15,9 @@ class TestDefaultEngine:
         assert parse(["--backfill"]).engine == "ollama"
 
     def test_environment_variable_overrides_the_default(self, monkeypatch):
-        monkeypatch.setenv("SCREENSHOT_LABELER_ENGINE", "cli")
+        monkeypatch.setenv("SCREENSHOT_LABELER_ENGINE", "api")
 
-        assert parse(["--backfill"]).engine == "cli"
+        assert parse(["--backfill"]).engine == "api"
 
     def test_explicit_flag_wins(self):
         assert parse(["--backfill", "--engine", "api"]).engine == "api"
@@ -26,7 +26,7 @@ class TestDefaultEngine:
 class TestModelDefaults:
     @pytest.mark.parametrize(
         "engine,expected",
-        [("ollama", "qwen2.5vl:7b"), ("cli", "haiku"), ("api", "claude-haiku-4-5")],
+        [("ollama", "qwen2.5vl:7b"), ("api", "claude-haiku-4-5")],
     )
     def test_each_engine_has_a_sensible_default_model(self, engine, expected):
         assert resolve_model(engine, None) == expected

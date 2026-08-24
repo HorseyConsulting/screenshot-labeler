@@ -5,13 +5,11 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-import shutil
 import sys
 import time
 from datetime import datetime
 from pathlib import Path
 
-from .cli_labeler import DEFAULT_CLI_MODEL, CliLabeler
 from .labeler import DEFAULT_MODEL, Labeler
 from .ocr import extract_text
 from .ollama_labeler import DEFAULT_OLLAMA_MODEL, OllamaLabeler
@@ -38,20 +36,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dir", type=Path, default=DEFAULT_WATCH_DIR)
     parser.add_argument(
         "--engine",
-        choices=("cli", "api", "ollama"),
+        choices=("ollama", "api"),
         # Local by default: it is the only engine the installer can guarantee
         # exists on a machine that just downloaded this.
         default=os.environ.get("SCREENSHOT_LABELER_ENGINE", "ollama"),
         help=(
-            "cli: the local claude CLI (no extra cost). "
-            "api: ANTHROPIC_API_KEY. "
-            "ollama: a vision model running locally on your GPU (fully offline)."
+            "ollama: a vision model running locally on your GPU (fully offline). "
+            "api: Anthropic API, requires ANTHROPIC_API_KEY."
         ),
     )
     parser.add_argument(
         "--model",
         default=os.environ.get("SCREENSHOT_LABELER_MODEL"),
-        help="defaults per engine: 'haiku' (cli), 'claude-haiku-4-5' (api), 'qwen2.5vl:7b' (ollama)",
+        help="defaults per engine: 'qwen2.5vl:7b' (ollama), 'claude-haiku-4-5' (api)",
     )
     parser.add_argument(
         "--no-ocr",
@@ -67,9 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 ENGINE_DEFAULT_MODELS = {
-    "cli": DEFAULT_CLI_MODEL,
-    "api": DEFAULT_MODEL,
     "ollama": DEFAULT_OLLAMA_MODEL,
+    "api": DEFAULT_MODEL,
 }
 
 
@@ -86,19 +82,11 @@ def make_labeler(engine: str, model: str, use_ocr: bool = True):
     if engine == "ollama":
         return OllamaLabeler(model=model, ocr_reader=ocr)
 
-    if engine == "cli":
-        if shutil.which("claude") is None:
-            raise SystemExit(
-                "The 'claude' CLI was not found on PATH.\n"
-                "Install Claude Code, or use --engine api with an ANTHROPIC_API_KEY."
-            )
-        return CliLabeler(model=model, ocr_reader=ocr)
-
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise SystemExit(
             "ANTHROPIC_API_KEY is not set.\n"
             'Set it once with:  setx ANTHROPIC_API_KEY "sk-ant-..."\n'
-            "then open a new terminal -- or use --engine cli instead."
+            "then open a new terminal -- or use --engine ollama instead."
         )
     from anthropic import Anthropic
 

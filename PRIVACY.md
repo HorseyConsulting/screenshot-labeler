@@ -10,7 +10,6 @@ exactly what happens to them.
 | Engine | Where the image goes | Leaves your PC? |
 |---|---|---|
 | `ollama` (default) | A vision model running on your own GPU, via `http://127.0.0.1:11434` | **No** |
-| `cli` | The Claude Code CLI on your machine, which sends it to Anthropic | **Yes** |
 | `api` | Anthropic's API over HTTPS | **Yes** |
 
 The OCR pass always runs locally, using the engine built into Windows. It never
@@ -34,15 +33,15 @@ reporting, and no network call of any kind on the default settings.
 
 ## If you switch to a cloud engine
 
-`--engine cli` and `--engine api` send a downscaled copy of each screenshot to
-Anthropic for labeling. That is a deliberate, opt-in change, and it means your
-screenshots are transmitted to and processed by a third party under their
-terms and privacy policy:
+`--engine api` sends a downscaled copy of each screenshot to Anthropic for
+labeling. That is a deliberate, opt-in change, and it means your screenshots
+are transmitted to and processed by a third party under their terms and privacy
+policy:
 
 - <https://www.anthropic.com/legal/privacy>
 - <https://www.anthropic.com/legal/consumer-terms>
 
-Do not use a cloud engine on a machine where screenshots may contain
+Do not use the cloud engine on a machine where screenshots may contain
 confidential, regulated, or personal data belonging to other people, unless you
 have the authority to disclose it.
 
