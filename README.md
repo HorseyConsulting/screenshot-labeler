@@ -89,7 +89,7 @@ Unregister-ScheduledTask -TaskName "Screenshot Labeler"    # remove
 
 | Flag | Meaning |
 |---|---|
-| `--dir PATH` | Folder to work on. Defaults to `%USERPROFILE%\OneDrive\Pictures\Screenshots`. |
+| `--dir PATH` | Folder to work on. Defaults to your Screenshots folder, detected automatically (OneDrive-redirected or `%USERPROFILE%\Pictures\Screenshots`). |
 | `--engine ollama\|api` | Which backend to label with. |
 | `--model ID` | Per-engine default: `qwen2.5vl:7b` (ollama), `claude-haiku-4-5` (api). |
 | `--no-ocr` | Skip the OCR assist. |

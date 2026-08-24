@@ -20,7 +20,16 @@ $ErrorActionPreference = "Stop"
 
 $toolDir    = Split-Path -Parent $MyInvocation.MyCommand.Path
 $pythonw    = Join-Path $toolDir ".venv\Scripts\pythonw.exe"
-$watchDir   = Join-Path $env:USERPROFILE "OneDrive\Pictures\Screenshots"
+# OneDrive redirects the Pictures library on some machines and not others,
+# so detect rather than assume. Created if absent -- Windows makes it on the
+# first Win+PrtScn, and the watcher needs it to exist to watch it.
+$oneDriveShots = Join-Path $env:USERPROFILE "OneDrive\Pictures\Screenshots"
+$plainShots    = Join-Path $env:USERPROFILE "Pictures\Screenshots"
+if (Test-Path $oneDriveShots) { $watchDir = $oneDriveShots } else { $watchDir = $plainShots }
+if (-not (Test-Path $watchDir)) {
+    New-Item -ItemType Directory -Path $watchDir -Force | Out-Null
+    Write-Host "Created $watchDir"
+}
 $taskName   = "Screenshot Labeler"
 
 if (-not (Test-Path $pythonw)) {

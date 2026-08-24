@@ -12,11 +12,12 @@ from pathlib import Path
 
 from .labeler import DEFAULT_MODEL, Labeler
 from .ocr import extract_text
+from .paths import find_screenshots_dir
 from .ollama_labeler import DEFAULT_OLLAMA_MODEL, OllamaLabeler
 from .renamer import find_candidates, undo_last_run
 from .runner import ProcessResult, process_directory, process_one
 
-DEFAULT_WATCH_DIR = Path.home() / "OneDrive" / "Pictures" / "Screenshots"
+DEFAULT_WATCH_DIR = find_screenshots_dir()
 TOOL_DIR = Path(__file__).resolve().parent.parent
 LOG_PATH = TOOL_DIR / "rename-log.jsonl"
 
@@ -182,7 +183,15 @@ def main(argv: list[str] | None = None) -> int:
         datefmt="%H:%M:%S",
     )
 
-    if not args.dir.is_dir():
+    if not args.dir.exists():
+        # Windows creates this on the first screenshot; making it early lets
+        # the watcher start on a machine that has never taken one.
+        try:
+            args.dir.mkdir(parents=True, exist_ok=True)
+            log.info("Created %s", args.dir)
+        except OSError as exc:
+            raise SystemExit(f"Could not create {args.dir}: {exc}")
+    elif not args.dir.is_dir():
         raise SystemExit(f"Not a directory: {args.dir}")
 
     if args.undo:
