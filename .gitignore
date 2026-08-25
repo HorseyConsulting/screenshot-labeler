@@ -4,3 +4,4 @@ __pycache__/
 rename-log.jsonl
 .pytest_cache/
 Marketing/
+NOTES.md
